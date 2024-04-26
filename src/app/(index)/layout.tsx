@@ -1,4 +1,4 @@
-import LayoutHeader from '@/components/layouts/header'
+import LayoutHeader from "@/components/layouts/header";
 
 export default function IndexLayout({ children }: LayoutProps) {
   return (
@@ -6,5 +6,5 @@ export default function IndexLayout({ children }: LayoutProps) {
       <LayoutHeader />
       <main className="flex-1">{children}</main>
     </div>
-  )
+  );
 }

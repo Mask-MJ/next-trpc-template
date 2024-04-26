@@ -1,48 +1,47 @@
-import type { User } from 'next-auth'
+"use client";
 
-import { signOut } from 'next-auth/react'
-import Link from 'next/link'
-import { notFound } from 'next/navigation'
-import { buttonVariants } from '@/components/ui/button'
+import type { User } from "next-auth";
+
+import { signOut } from "next-auth/react";
+import Link from "next/link";
+import { buttonVariants } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { getCurrentUser } from '@/lib/session'
-import { cn } from '@/lib/utils'
+} from "@/components/ui/dropdown-menu";
+import { cn } from "@/lib/utils";
 
-import { UserAvatar } from './user-avatar'
+import { UserAvatar } from "./user-avatar";
 
 interface UserAccountNavProps extends React.HTMLAttributes<HTMLDivElement> {
-  user: Pick<User, 'name' | 'image' | 'email'>
+  user: Pick<User, "name" | "image" | "email">;
 }
 
-export default async function UserAccountNav() {
-  const user = await getCurrentUser()
+export default function UserAccountNav({ user }: UserAccountNavProps) {
   if (!user) {
     return (
       <nav>
         <Link
           href="/login"
           className={cn(
-            buttonVariants({ variant: 'secondary', size: 'sm' }),
-            'px-4'
+            buttonVariants({ variant: "secondary", size: "sm" }),
+            "px-4",
           )}
         >
           Login
         </Link>
       </nav>
-    )
+    );
   }
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
         <UserAvatar
-          user={{ name: user.name || null, image: user.image || null }}
+          user={{ name: user.name ?? null, image: user.image ?? null }}
           className="h-8 w-8"
         />
       </DropdownMenuTrigger>
@@ -51,7 +50,7 @@ export default async function UserAccountNav() {
           <div className="flex flex-col space-y-1 leading-none">
             {user.name && <p className="font-medium">{user.name}</p>}
             {user.email && (
-              <p className="text-muted-foreground w-[200px] truncate text-sm">
+              <p className="w-[200px] truncate text-sm text-muted-foreground">
                 {user.email}
               </p>
             )}
@@ -68,18 +67,18 @@ export default async function UserAccountNav() {
           <Link href="/dashboard/settings">Settings</Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        {/* <DropdownMenuItem
+        <DropdownMenuItem
           className="cursor-pointer"
-          onSelect={(event: Event) => {
-            event.preventDefault()
-            signOut({
+          onSelect={async (event: Event) => {
+            event.preventDefault();
+            await signOut({
               callbackUrl: `${window.location.origin}/login`,
-            })
+            });
           }}
         >
           Sign out
-        </DropdownMenuItem> */}
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  )
+  );
 }
