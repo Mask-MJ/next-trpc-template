@@ -1,16 +1,15 @@
 import Image from "next/image";
 import Link from "next/link";
 import { api } from "@/trpc/server";
+import { formatDate } from "@/lib/utils";
 
 export const metadata = {
   title: "Blog",
 };
 
-export default async function DashboardPage() {
-  // const hello = await api.post.hello({ text: "111" });
+export default async function BlogPage() {
   const posts = await api.post.getPosts();
   console.log(posts);
-  // const posts = await appRouter.post.getPosts({ ctx: { session: { user } } })
   return (
     <div className="container max-w-4xl py-6 lg:py-10">
       <div className="flex flex-col items-start gap-4 md:flex-row md:justify-between md:gap-8">
@@ -45,12 +44,12 @@ export default async function DashboardPage() {
               {post.description && (
                 <p className="text-muted-foreground">{post.description}</p>
               )}
-              {post.date && (
+              {post.updatedAt && (
                 <p className="text-sm text-muted-foreground">
-                  {formatDate(post.date)}
+                  {formatDate(post.updatedAt)}
                 </p>
               )}
-              <Link href={post.slug} className="absolute inset-0">
+              <Link href={post.id} className="absolute inset-0">
                 <span className="sr-only">View Article</span>
               </Link>
             </article>

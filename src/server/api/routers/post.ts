@@ -18,9 +18,6 @@ export const postRouter = createTRPCRouter({
   create: protectedProcedure
     .input(z.object({ title: z.string().min(1) }))
     .mutation(async ({ ctx, input }) => {
-      // simulate a slow db call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
       return ctx.db.post.create({
         data: {
           title: input.title,
@@ -45,4 +42,13 @@ export const postRouter = createTRPCRouter({
       orderBy: { createdAt: "desc" },
     });
   }),
+
+  getPostsByAuthor: publicProcedure
+    .input(z.string())
+    .query(async ({ input, ctx }) => {
+      return ctx.db.post.findMany({
+        orderBy: { createdAt: "desc" },
+        where: { author: { id: input } },
+      });
+    }),
 });
