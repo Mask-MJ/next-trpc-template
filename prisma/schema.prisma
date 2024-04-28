@@ -17,7 +17,7 @@ datasource db {
 model Post {
   id          String   @id @default(cuid())
   title       String
-  image       String?
+  image       String
   description String   @default("")
   content     Json?
   published   Boolean  @default(false)

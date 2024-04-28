@@ -1,12 +1,11 @@
 import { getCurrentUser } from "@/lib/session";
-import { EmptyPlaceholder } from "@/components/empty-placeholder";
-import { DashboardHeader } from "@/components/header";
-import { PostCreateButton } from "@/components/post-create-button";
-import { PostItem } from "@/components/post-item";
-import { DashboardShell } from "@/components/shell";
+import { EmptyPlaceholder } from "./_components/empty-placeholder";
+import { PostCreateButton } from "./_components/post-create-button";
+import { PostItem } from "./_components/post-item";
 import { api } from "@/trpc/server";
 import { redirect } from "next/navigation";
 import { authOptions } from "@/server/auth";
+import { cn } from "@/lib/utils";
 
 export const metadata = {
   title: "Dashboard",
@@ -22,10 +21,16 @@ export default async function DashboardPage() {
   const posts = await api.post.getPostsByAuthor(user.id);
 
   return (
-    <DashboardShell>
-      <DashboardHeader heading="Posts" text="Create and manage posts.">
+    <div className={cn("grid items-start gap-8")}>
+      <div className="flex items-center justify-between px-2">
+        <div className="grid gap-1">
+          <h1 className="font-heading text-3xl md:text-4xl">Posts</h1>
+          <p className="text-lg text-muted-foreground">
+            Create and manage posts.
+          </p>
+        </div>
         <PostCreateButton />
-      </DashboardHeader>
+      </div>
       <div>
         {posts?.length ? (
           <div className="divide-y divide-border rounded-md border">
@@ -35,7 +40,7 @@ export default async function DashboardPage() {
           </div>
         ) : (
           <EmptyPlaceholder>
-            <EmptyPlaceholder.Icon name="post" />
+            <EmptyPlaceholder.Icon name="FileText" />
             <EmptyPlaceholder.Title>No posts created</EmptyPlaceholder.Title>
             <EmptyPlaceholder.Description>
               You don&apos;t have any posts yet. Start creating content.
@@ -44,6 +49,6 @@ export default async function DashboardPage() {
           </EmptyPlaceholder>
         )}
       </div>
-    </DashboardShell>
+    </div>
   );
 }
